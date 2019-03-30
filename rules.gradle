@@ -1,7 +1,11 @@
 beforeEvaluate {
-    def charter = '.'
-    def regular = '\'((?!:).+):((?!:).+):((\\d+)\\.(\\d+)\\.(\\d+))\''
     File buildFile = getBuildFile()
+    if(!buildFile.exists()){
+        return
+    }
+    def charter1 = '.'
+    def charter2 = ':'
+    def regular = '\'((?!:).+):((?!:).+):((\\d+)\\.(\\d+)\\.(\\d+))\''
     def stack = new Stack<>()
     def start = false
     def lineNo = 0
@@ -28,8 +32,8 @@ beforeEvaluate {
                 if (stack.isEmpty()) {
                     break
                 }
-                if (line.count(charter) >= 2 && !line.matches(regular)) {
-                    throw new GradleException("${project.name} module: build.gradle dependencies check error, You must define it in config.gradle \r\n at line ${lineNo}: ${line}")
+                if (!line.contains('rootProject') && line.count(charter1) >= 2 && line.contains(charter2) && !line.matches(regular)) {
+                    throw new GradleException("build.gradle dependencies check error, You must define it in config.gradle \r\n module: ${project.name}, at line ${lineNo}: ${line}")
                 }
             }
         }
