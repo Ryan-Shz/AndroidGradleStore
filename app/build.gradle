@@ -1,11 +1,50 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.ryan.plugin'
+
+// 初始化阶段和配置阶段之间的监听
+beforeEvaluate {
+    println "配置阶段之前监听"
+}
+
+// 配置阶段之后，执行阶段之前的监听
+afterEvaluate {
+    println "配置阶段之后监听"
+}
+
+// Gradle执行后以后的监听
+gradle.buildFinished {
+    println "执行阶段结束监听"
+}
+
+// 等同于beforeEvaluate
+gradle.beforeProject {
+
+}
+
+// 等同于afterEvaluate
+gradle.afterProject {
+
+}
+
+println "build dir is " + project.getBuildDir()
+println "root dir is " + project.getRootDir()
+project.plugins.findAll {
+    println 'find plugin: ' + it.toString()
+}
+project.gradle.taskGraph.whenReady {
+    println 'taskGraph is ready.'
+}
+
+Ryan{
+    name 'hello gradle plugin.'
+}
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.ryan.gradle.store"
         minSdkVersion 15
-        targetSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -14,6 +53,45 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+// 修改APK名称
+afterEvaluate {
+    android.applicationVariants.each {
+        def name = it.name
+        def baseName = it.baseName
+        println "the name is ${name}, baseName is ${baseName}"
+        def output = it.outputs.first()
+        def outputPath = output.outputFile.path
+        println("old apk path is ${outputPath}")
+        long timeTemp = System.currentTimeMillis()
+        def newApkName = "app-${baseName}-${it.versionName}-${timeTemp}.apk"
+        // Gradle3.0之后修改为outputFileName
+        output.outputFileName = newApkName
+        println "the output path is ${output.outputFile.path}"
+    }
+}
+
+task netRequestTask << {
+    println '-------begin request---------'
+    android.applicationVariants.all {
+        def task = it.checkManifest
+        task.doFirst {
+            def url = new URL("http://www.baidu.com")
+            def connection = url.openConnection()
+            connection.connect()
+            def is = connection.getInputStream()
+            def tempFile = file("temp.txt")
+            if (!tempFile.exists()) {
+                tempFile.createNewFile()
+            }
+            def text = is.text
+            tempFile.write(text)
         }
     }
 }
@@ -25,4 +103,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test:runner:1.0.1')
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
+
+// 强制指定版本
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:appcompat-v7:26.1.0'
+    }
 }
