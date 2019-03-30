@@ -1,2 +1,2 @@
-# AndroidGradleStore
-a sample library to store myself gradle script.
+# AndroidAndroidGradleStore
+A library of store gradle script sample.

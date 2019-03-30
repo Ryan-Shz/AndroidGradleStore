@@ -1,0 +1,73 @@
+beforeEvaluate {
+    def charter = '.'
+    def regular = '\'((?!:).+):((?!:).+):((\\d+)\\.(\\d+)\\.(\\d+))\''
+    File buildFile = getBuildFile()
+    def stack = new Stack<>()
+    def start = false
+    def lineNo = 0
+    buildFile.withReader {
+        def lines = it.readLines()
+        for (line in lines) {
+            lineNo++
+            line = line.trim()
+            if (line.isEmpty()) {
+                continue
+            }
+            if (line.startsWith('dependencies')) {
+                start = true
+                stack.push('{')
+                continue
+            }
+            if (start) {
+                if (line.contains('{')) {
+                    stack.push('{')
+                }
+                if (line.contains('}')) {
+                    stack.pop()
+                }
+                if (stack.isEmpty()) {
+                    break
+                }
+                if (line.count(charter) >= 2 && !line.matches(regular)) {
+                    throw new GradleException("${project.name} module: build.gradle dependencies check error, You must define it in config.gradle \r\n at line ${lineNo}: ${line}")
+                }
+            }
+        }
+    }
+}
+
+beforeEvaluate {
+    def projectName = project.name
+    if (projectName.startsWith("appstore_")) {
+        return
+    }
+    def resourceSets = android.sourceSets
+    if (resourceSets != null) {
+        resourceSets.main.res.srcDirs.each {
+            def file = file(it)
+            if (file.exists() && file.isDirectory()) {
+                scanFiles(file)
+            }
+        }
+    }
+}
+
+static void scanFiles(File file) {
+    if (!file.exists()) {
+        return
+    }
+    if (file.isDirectory()) {
+        file.list().each {
+            def dirPath = file.path + File.separator + it
+            def dirFile = new File(dirPath)
+            if (dirFile.exists() && dirFile.isDirectory()) {
+                dirFile.list().each { resName ->
+                    def projectName = project.name
+                    if (!resName.startsWith(projectName)) {
+                        throw new GradleException("The resource name: ${resName} is not standardized, please follow the naming convention. \r\n at file path: ${dirPath + File.separator + resName}")
+                    }
+                }
+            }
+        }
+    }
+}
