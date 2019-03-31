@@ -1,0 +1,59 @@
+ext {
+    //Android Build 相关版本
+    ANDROID = ext {
+        BUILD_TOOLS_VERSION = '26.0.2'
+        COMPILE_SDK_VERSION = 26
+        MIN_SDK_VERSION = 15
+        TARGET_SDK_VERSION = COMPILE_SDK_VERSION
+    }
+
+    //Google官方库依赖
+    GOOGLE_DEPENDENCIES = ext {
+        VERSIONS = ext {
+            ANDROID_SUPPORT_VERSION = '27.1.1'
+            GOOGLE_LIBRARY = '11.6.0'
+        }
+        SUPPORT_V4 = "com.android.support:support-v4:$ANDROID_SUPPORT_VERSION"
+        APPCOMPAT_V7 = "com.android.support:appcompat-v7:$ANDROID_SUPPORT_VERSION"
+        RECYCLERVIEW_V7 = "com.android.support:recyclerview-v7:$ANDROID_SUPPORT_VERSION"
+        CONSTRAINT_LAYOUT = "com.android.support.constraint:constraint-layout:1.0.2"
+        MULTIDEX = "com.android.support:multidex:1.0.1"
+        GOOGLE_AUTH = "com.google.android.gms:play-services-auth:11.6.0"
+        TWITTER_LIBRARY = "com.facebook.android:facebook-android-sdk:4.25.0"
+        PROTOBUF = "com.google.protobuf:protobuf-java:3.5.1"
+        GOOGLE_ADS = "com.google.android.gms:play-services-ads:${GOOGLE_LIBRARY}"
+    }
+
+    // 第三方库依赖
+    THIRDPARTY_DEPENDENCIES = ext {
+        VERSIONS = ext {
+            RETROFIT_VERSION = "2.3.0"
+            OKHTTP_VERSION = "3.9.0"
+            FRESCO_VERSION = "1.5.0"
+            RXJAVA_VERSION = "2.1.7"
+        }
+        JUNIT = "junit:junit:4.12"
+        EVENTBUS = "org.greenrobot:eventbus:3.0.0"
+        RETROFIT = "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+        RETROFIT_CONVERTER_GSON = "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+        RETROFIT_ADAPTER_RXJAVA = "com.squareup.retrofit2:adapter-rxjava2:$RETROFIT_VERSION"
+        OKHTTP = "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+        OKHTTP_LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
+        FRESCO = "com.facebook.fresco:fresco:$FRESCO_VERSION"
+        FRESCO_OKHTTP = "com.facebook.fresco:imagepipeline-okhttp3:$FRESCO_VERSION"
+        FRESCO_ANIMATED_WEBP = "com.facebook.fresco:animated-webp:$FRESCO_VERSION"
+        FRESCO_ANIMATED_GIF = "com.facebook.fresco:animated-gif:$FRESCO_VERSION"
+        FRESCO_STATIC_WEBP = "com.facebook.fresco:webpsupport:$FRESCO_VERSION"
+        RXJAVA = "io.reactivex.rxjava2:rxjava:$RXJAVA_VERSION"
+        RXLIFECYCLE_COMPONENTS = "com.trello.rxlifecycle2:rxlifecycle-components:2.2.1"
+        RXLIFECYCLE = "com.trello.rxlifecycle2:rxlifecycle:2.2.0"
+        RXLIFECYCLE_ANDROID = "com.trello.rxlifecycle2:rxlifecycle-android:2.2.0"
+        OKHTTP_LOGGING_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:3.9.0"
+        OKHTTP = "com.squareup.okhttp3:okhttp:3.9.0"
+        SYSTEM_BAR_TINT = "com.readystatesoftware.systembartint:systembartint:1.0.3"
+        RXNETTY = "io.reactivex:rxnetty-tcp:0.5.2"
+        GSON = "com.google.code.gson:gson:2.8.1"
+        RXANDROID = "io.reactivex:rxandroid:1.1.0"
+        RXNETTY_EXCLUDE = "org.openjdk.jmh"
+    }
+}

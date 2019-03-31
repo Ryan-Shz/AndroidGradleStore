@@ -1,11 +1,13 @@
-beforeEvaluate {
-    File buildFile = getBuildFile()
-    if(!buildFile.exists()){
+afterEvaluate {
+    def buildFile = getBuildFile()
+    if (!buildFile.exists()) {
         return
     }
-    def charter1 = '.'
-    def charter2 = ':'
-    def regular = '\'((?!:).+):((?!:).+):((\\d+)\\.(\\d+)\\.(\\d+))\''
+    def dependenciesRuleFile = 'dependencies.gradle'
+    def dependenciesTag = 'dependencies'
+    def regular = /([0-9a-z-\.]+:){2}\d(\.\d){0,2}/
+    def startTag = '{'
+    def endTag = '}'
     def stack = new Stack<>()
     def start = false
     def lineNo = 0
@@ -17,32 +19,34 @@ beforeEvaluate {
             if (line.isEmpty()) {
                 continue
             }
-            if (line.startsWith('dependencies')) {
+            if (line.startsWith(dependenciesTag)) {
                 start = true
-                stack.push('{')
+                stack.push(startTag)
                 continue
             }
             if (start) {
-                if (line.contains('{')) {
-                    stack.push('{')
+                if (line.contains(startTag)) {
+                    stack.push(startTag)
                 }
-                if (line.contains('}')) {
+                if (line.contains(endTag)) {
                     stack.pop()
                 }
                 if (stack.isEmpty()) {
                     break
                 }
-                if (!line.contains('rootProject') && line.count(charter1) >= 2 && line.contains(charter2) && !line.matches(regular)) {
-                    throw new GradleException("build.gradle dependencies check error, You must define it in config.gradle \r\n module: ${project.name}, at line ${lineNo}: ${line}")
+                def matcher = line =~ regular
+                if (matcher.find()) {
+                    throw new GradleException("build.gradle dependencies check error, You must define it in ${dependenciesRuleFile} file. \r\n at line ${lineNo}: ${line} \r\n File path: ${buildFile.absolutePath}")
                 }
             }
         }
     }
 }
 
-beforeEvaluate {
+afterEvaluate {
+    def projectPrefix = ''
     def projectName = project.name
-    if (projectName.startsWith("appstore_")) {
+    if (!projectName.startsWith(projectPrefix)) {
         return
     }
     def resourceSets = android.sourceSets
