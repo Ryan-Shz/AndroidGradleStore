@@ -46,6 +46,18 @@ afterEvaluate {
 }
 
 afterEvaluate {
+    def libModule = 'libs'
+    if (project.name == libModule) {
+        return
+    }
+    android.sourceSets.main.jniLibs.srcDirs.each { dirFile ->
+        if (dirFile != null && dirFile.exists() && dirFile.list().size() > 0) {
+            throw new GradleException("The external lib file must be defined under the ${libModule} module.\r\nplease check the folder path: ${dirFile.absolutePath} and move all of them to ${libModule} module.")
+        }
+    }
+}
+
+afterEvaluate {
     def projectPrefix = ''
     def projectName = project.name
     if (!projectName.startsWith(projectPrefix)) {
