@@ -5,7 +5,8 @@ afterEvaluate {
     }
     def dependenciesRuleFile = 'dependencies.gradle'
     def dependenciesTag = 'dependencies'
-    def regular = /([0-9a-z-\.]+:){2}\d(\.\d){0,2}/
+    def regular1 = /([\da-z-\.]+:){2}\d(\.\d){0,2}/
+    def regular2 = /group:.*,.*name:.*,.*version:.*\d+(\.\d)*/
     def startTag = '{'
     def endTag = '}'
     def stack = new Stack<>()
@@ -34,8 +35,9 @@ afterEvaluate {
                 if (stack.isEmpty()) {
                     break
                 }
-                def matcher = line =~ regular
-                if (matcher.find()) {
+                def matcher1 = line =~ regular1
+                def matcher2 = line =~ regular2
+                if (matcher1.find() || matcher2.find()) {
                     throw new GradleException("build.gradle dependencies check error, You must define it in ${dependenciesRuleFile} file. \r\n at line ${lineNo}: ${line} \r\n File path: ${buildFile.absolutePath}")
                 }
             }
