@@ -58,6 +58,63 @@ afterEvaluate {
 }
 
 afterEvaluate {
+    if (!CHECK_PACKAGE_NAME.toBoolean()) {
+        println 'skip check package name. '
+        return
+    }
+    def skipLib = []
+    def name = project.name
+    if (name in skipLib) {
+        return
+    }
+    def srcDirs = android.sourceSets.main.java.srcDirs
+    def srcFile = new File(srcDirs[0].path)
+    if (!srcFile.exists() || srcFile.list().size() == 0) {
+        return
+    }
+    def moduleRule = 'com.ryan.gradle'
+    def com = 'com'
+    def ryan = 'ryan'
+    def gradle = 'gradle'
+    def comFile = new File(srcFile.absolutePath + File.separator + com)
+    def ryanFile = new File(comFile.absolutePath + File.separator + ryan)
+    def errorMsg = "The module package name must be named ${moduleRule}. \r\n see path: ${srcFile.absolutePath}"
+    if (comFile.exists()) {
+        def comList = comFile.list()
+        if (comList.size() == 0) {
+            return
+        }
+        if (comList[0] != ryan || comList.size() >= 2) {
+            throw new GradleException(errorMsg)
+        }
+    }
+    if (ryanFile.exists()) {
+        def ryanList = ryanFile.list()
+        if (ryanList.size() == 0) {
+            return
+        }
+        if (ryanList[0] != gradle || ryanList.size() >= 2) {
+            throw new GradleException(errorMsg)
+        }
+    }
+    def gradleDir = ryanFile.path + File.separator + gradle
+    def gradleFile = new File(gradleDir)
+    if (!gradleFile.exists()) {
+        throw new GradleException(errorMsg)
+    }
+    File manifestFile = android.sourceSets.main.manifest.srcFile
+    if (!manifestFile.exists()) {
+        return
+    }
+    XmlParser parser = new XmlParser()
+    def node = parser.parse(manifestFile)
+    String packageName = node.attribute('package')
+    if (!packageName.startsWith(moduleRule)) {
+        throw new GradleException("The package name in AndroidManifest must start with ${moduleRule}. \r\n see file path: ${manifestFile.absolutePath}")
+    }
+}
+
+afterEvaluate {
     def projectPrefix = ''
     def projectName = project.name
     if (!projectName.startsWith(projectPrefix)) {
