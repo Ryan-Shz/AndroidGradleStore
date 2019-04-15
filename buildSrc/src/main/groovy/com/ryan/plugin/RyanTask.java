@@ -4,6 +4,8 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
 /**
+ * a template for how to define a task by java.
+ * <p>
  * created by 2019/3/30 9:55 PM
  *
  * @author Ryan

@@ -156,5 +156,4 @@ class PluginRepoImpl implements Plugin<Settings> {
     static boolean useSSH(String url) {
         url.startsWith('ssh://')
     }
-
 }

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.ryan.plugin'
 
 task getGitBranch {
     String branchCmd = 'git branch'
@@ -47,7 +46,7 @@ project.gradle.taskGraph.whenReady {
 }
 
 Ryan {
-    name 'hello gradle plugin.'
+    checkResource false
 }
 
 android {

@@ -25,10 +25,7 @@ task clean(type: Delete) {
 }
 
 subprojects {
-    if (CHECK_RULE.toBoolean()) {
-        def ruleFileName = 'rules.gradle'
-        apply from: getRootDir().path + File.separator + ruleFileName
-    }
+    apply plugin: 'com.ryan.plugin'
 }
 
 apply from: 'dependencies.gradle'
