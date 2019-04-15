@@ -35,7 +35,7 @@ project.gradle.taskGraph.whenReady {
     println 'taskGraph is ready.'
 }
 
-Ryan{
+Ryan {
     name 'hello gradle plugin.'
 }
 
@@ -102,7 +102,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test:runner:1.0.1')
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation group:'com.android.support', name:'appcompat-v7', version:'26.1.0'
+    implementation group: 'com.android.support', name: 'appcompat-v7', version: '26.1.0'
 }
 
 // 强制指定版本
