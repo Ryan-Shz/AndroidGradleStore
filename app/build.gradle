@@ -1,6 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.ryan.plugin'
 
+task getGitBranch {
+    String branchCmd = 'git branch'
+    Process process = branchCmd.execute()
+    def out = new StringBuffer()
+    def err = new StringBuffer()
+    process.consumeProcessOutput(out, err)
+    process.waitFor()
+    if (out.size() > 0) println out
+    if (err.size() > 0) println err
+}
+
 // 初始化阶段和配置阶段之间的监听
 beforeEvaluate {
     println "配置阶段之前监听"
@@ -35,7 +46,7 @@ project.gradle.taskGraph.whenReady {
     println 'taskGraph is ready.'
 }
 
-Ryan{
+Ryan {
     name 'hello gradle plugin.'
 }
 
@@ -102,7 +113,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test:runner:1.0.1')
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation group:'com.android.support', name:'appcompat-v7', version:'26.1.0'
+    implementation group: 'com.android.support', name: 'appcompat-v7', version: '26.1.0'
 }
 
 // 强制指定版本

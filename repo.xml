@@ -1,0 +1,8 @@
+<project>
+    <module>
+        <name>EventFlow</name>
+        <repo>https://github.com/Ryan-Shz/EventFlow</repo>
+        <branch>master</branch>
+        <include>false</include>
+    </module>
+</project>
